@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace epoHless
@@ -14,15 +16,36 @@ namespace epoHless
         [Header("Spawn Settings")]
         [SerializeField] private List<Tower> targets;
         [SerializeField] private Transform[] spawnPoints;
+        
+        [Header("UI Settings")]
+        [SerializeField] private Button startWaveButton;
 
         private float _waveTimer;
         private float _spawnTimer;
         
-        private void Start() => _currentWave = waves[0];
+        private bool _isWaveActive;
+        
+        private int _currentWaveIndex;
+        
+        public event Action<Wave> OnWaveEndEvent; 
+        public event Action<float> OnEnemyDeathEvent; 
+        public event Action OnGameEndEvent;
+        
+        private void OnEnable() => startWaveButton.onClick.AddListener(StartWave);
+        private void OnDisable() => startWaveButton.onClick.RemoveListener(StartWave);
+
+        private void Start() => _currentWave = waves[_currentWaveIndex];
 
         private void Update()
         {
-            if (!AreTargetsAlive()) return;
+            if (!_isWaveActive) return;   
+            
+            if (!AreTargetsAlive())
+            {
+                OnGameEndEvent?.Invoke();
+                
+                return;
+            }
 
             if (IsCurrentWaveActive())
             {
@@ -36,6 +59,10 @@ namespace epoHless
 
             if (_waveTimer >= _currentWave.GetWaveDuration())
             {
+                OnWaveEndEvent?.Invoke(_currentWave);
+                
+                _isWaveActive = false;
+                
                 return false;
             }
             
@@ -52,8 +79,8 @@ namespace epoHless
                 
                 if (targets.Count == 0)
                 {
-                    enabled = false;
-
+                    startWaveButton.gameObject.SetActive(true);
+                    
                     return;
                 }
 
@@ -83,7 +110,7 @@ namespace epoHless
 
         private void OnEnemyDeath()
         {
-            
+            OnEnemyDeathEvent?.Invoke(_currentWave.GetPointsPerEnemy());
         }
 
         private bool AreTargetsAlive()
@@ -97,6 +124,25 @@ namespace epoHless
             }
 
             return false;
+        }
+        
+        private void StartWave()
+        {
+            _waveTimer = 0;
+            _spawnTimer = 0;
+            
+            _currentWaveIndex = Array.IndexOf(waves, _currentWave) + 1;
+            
+            if (_currentWaveIndex >= waves.Length)
+            {
+                OnGameEndEvent?.Invoke();
+                
+                return;
+            }
+            
+            startWaveButton.gameObject.SetActive(false);
+            
+            _isWaveActive = true;
         }
     }
 }

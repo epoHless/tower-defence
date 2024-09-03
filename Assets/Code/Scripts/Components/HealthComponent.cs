@@ -14,8 +14,6 @@ namespace epoHless
         public void TakeDamage(float damage)
         {
             _health -= damage;
-
-            Debug.Log($"{gameObject.name} took {damage} damage. Remaining health: {_health}");
             
             if(healthUI) healthUI.UpdateHealth(_health / _maxHealth);
             
