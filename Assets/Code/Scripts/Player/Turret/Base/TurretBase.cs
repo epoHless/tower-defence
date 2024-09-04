@@ -14,5 +14,7 @@ namespace epoHless
             _turret.transform.SetParent(attachmentPoint);
             _turret.transform.localPosition = Vector3.zero;
         }
+        
+        public bool HasTurret() => _turret != null;
     }
 }

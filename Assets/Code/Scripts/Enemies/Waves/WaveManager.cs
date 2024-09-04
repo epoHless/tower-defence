@@ -27,6 +27,8 @@ namespace epoHless
         
         private int _currentWaveIndex;
         
+        private readonly List<Enemy> _activeEnemies = new List<Enemy>();
+        
         public event Action<Wave> OnWaveEndEvent; 
         public event Action<float> OnEnemyDeathEvent; 
         public event Action OnGameEndEvent;
@@ -59,14 +61,19 @@ namespace epoHless
 
             if (_waveTimer >= _currentWave.GetWaveDuration())
             {
-                OnWaveEndEvent?.Invoke(_currentWave);
-                
-                _isWaveActive = false;
-                
                 return false;
             }
             
             return true;
+        }
+
+        private void OnWaveFinished()
+        {
+            startWaveButton.gameObject.SetActive(true);
+            
+            OnWaveEndEvent?.Invoke(_currentWave);
+            
+            _isWaveActive = false;
         }
 
         private void CalculateSpawn()
@@ -79,8 +86,6 @@ namespace epoHless
                 
                 if (targets.Count == 0)
                 {
-                    startWaveButton.gameObject.SetActive(true);
-                    
                     return;
                 }
 
@@ -102,15 +107,24 @@ namespace epoHless
             {
                 tower = targets[Random.Range(0, targets.Count)];
             }
+
+            enemy.GetHealthComponent().OnDeath += () => _activeEnemies.Remove(enemy);
             
             enemy.GetHealthComponent().OnDeath += OnEnemyDeath;
-            
+
             enemy.GetMovement().MoveTo(tower.GetTarget().position);
+            
+            _activeEnemies.Add(enemy);
         }
 
         private void OnEnemyDeath()
         {
             OnEnemyDeathEvent?.Invoke(_currentWave.GetPointsPerEnemy());
+            
+            if (_activeEnemies.Count == 0)
+            {
+                OnWaveFinished();
+            }
         }
 
         private bool AreTargetsAlive()

@@ -32,5 +32,16 @@ namespace epoHless
             
             economyUI.UpdateEnergy(energy);
         }
+        
+        public bool SpendEnergy(float amount)
+        {
+            if (energy < amount) return false;
+            
+            energy -= amount;
+            
+            economyUI.UpdateEnergy(energy);
+            
+            return true;
+        }
     }
 }
