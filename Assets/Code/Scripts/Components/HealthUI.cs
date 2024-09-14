@@ -21,11 +21,6 @@ namespace epoHless
             UpdateHealth(1);
         }
 
-        private void Update()
-        {
-            transform.LookAt(_camera.transform);
-        }
-
         public void UpdateHealth(float percentage)
         {
             _healthBar.fillAmount = percentage;

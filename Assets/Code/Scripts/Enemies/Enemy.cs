@@ -1,8 +1,10 @@
-using System;
 using UnityEngine;
 
 namespace epoHless
 {
+    /// <summary>
+    /// The enemy class is responsible for the enemy's health and movement.
+    /// </summary>
     public class Enemy : MonoBehaviour
     {
         [SerializeField] private EnemyData data;

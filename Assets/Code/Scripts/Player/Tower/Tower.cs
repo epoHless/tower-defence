@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace epoHless
 {
+    /// <summary>
+    /// The Tower class is a MonoBehaviour that represents a tower in the game.
+    /// </summary>
     public class Tower : MonoBehaviour
     {
         [SerializeField] private TowerData data;

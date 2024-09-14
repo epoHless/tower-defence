@@ -3,15 +3,14 @@ using UnityEngine;
 
 namespace epoHless
 {
+    /// <summary>
+    /// The EconomyManager class is responsible for managing the player's score and energy.
+    /// </summary>
     public class EconomyManager : MonoBehaviour
     {
         [SerializeField] private float score;
         [SerializeField] private float energy;
         [SerializeField] private EconomyUI economyUI;
-
-        public float GetScore() => score;
-        
-        public float GetEnergy() => energy;
 
         private void Start()
         {

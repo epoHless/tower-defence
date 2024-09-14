@@ -1,8 +1,10 @@
-using System;
 using UnityEngine;
 
 namespace epoHless
 {
+    /// <summary>
+    /// Turret class is responsible for shooting enemies. It finds the closest enemy in range and shoots at it.
+    /// </summary>
     public class Turret : MonoBehaviour
     {
         [SerializeField] private TurretData data;
@@ -24,17 +26,23 @@ namespace epoHless
 
         private void Update()
         {
+            // If there is no target, find one
             if (_target == null)
             {
                 FindTarget();
                 return;
             }
             
+            // If there is a target, check if it is still in range
             TargetUpdate();
             
+            // If there is no target, return    
             if (_target == null) return;
 
+            // Rotate towards the target
             RotationUpdate();
+            
+            // If the turret is ready to shoot, shoot
             ShootUpdate();
         }
 
@@ -51,10 +59,14 @@ namespace epoHless
         private void FindTarget()
         {
             var results = new Collider[10];
+            
+            // Find all enemies in range of the turret within a sphere
             var size = Physics.OverlapSphereNonAlloc(transform.position, _range, results);
-
+            
+            // Check if there are any enemies in range
             for (var i = 0; i < size; i++)
             {
+                // If the object is not an enemy, skip
                 if (results[i].TryGetComponent(out Enemy enemy))
                 {
                     _target = enemy;
@@ -73,12 +85,15 @@ namespace epoHless
 
         private void ShootUpdate()
         {
+            // If the turret is ready to shoot, shoot   
             if (_fireCountdown <= 0f)
             {
                 Shoot();
                 _fireCountdown = _fireRate;
             }
 
+            
+            // Decrease the fire countdown by the time passed since the last frame
             _fireCountdown -= Time.deltaTime;
         }
 
@@ -87,6 +102,7 @@ namespace epoHless
             _target.GetHealthComponent().TakeDamage(_damage);
         }
 
+        // Draw the range of the turret in the editor for debugging purposes
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;

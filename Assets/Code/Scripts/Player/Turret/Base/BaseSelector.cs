@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace epoHless
 {
+    /// <summary>
+    /// The BaseSelector class is responsible for selecting a turret base.
+    /// </summary>
     public class BaseSelector : MonoBehaviour
     {
         private Camera _camera;
@@ -18,7 +21,7 @@ namespace epoHless
         {
             if (Input.GetMouseButtonDown(1))
             {
-                OnBaseSelected?.Invoke(TrySelectBase(out var _base) ? _base : null);
+                OnBaseSelected?.Invoke(TrySelectBase(out var _base) ? _base : null); // The base is selected if the TrySelectBase method returns true. Otherwise, the base is null.
             }
         }
 

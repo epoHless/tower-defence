@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e6272a0d3fe49019a572e8660f7e8c6, type: 3}
-  m_Name: Enemy_Ufo
+  m_Name: Enemy_Ufo_2
   m_EditorClassIdentifier: 
-  health: 10
-  speed: 2
-  damage: 1
+  health: 6
+  speed: 4
+  damage: 3
